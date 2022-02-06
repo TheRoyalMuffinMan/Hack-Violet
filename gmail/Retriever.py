@@ -79,7 +79,6 @@ def create_message(name, segment, certainty):
   message['to'] = ADMIN
   message['from'] = USER
   message['subject'] = "Report - Misconduct"
-  # print(message.as_string())
   return {'raw': base64.urlsafe_b64encode(message.as_string().encode("utf-8")).decode()}
 
 def send_message(service, message):
@@ -94,13 +93,10 @@ def send_message(service, message):
   Returns:
     Sent Message.
   """
-  # try:
   message = (service.users().messages().send(userId='me', body=message)
               .execute())
   print('Message Id: %s' % message['id'])
   return message
-  # except HttpError as error:
-  #   print('An error occurred: %s' % error)
 
 
 def main():
@@ -120,23 +116,7 @@ def main():
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
-    service = build('gmail', 'v1', credentials=creds)
-
-    # this will get the name and email cleanly
-    # msg_res = service.users().messages()
-    # results = msg_res.list(userId='me', maxResults=10).execute()
-    # messages = results.get('messages', [])
-    # if not messages:
-    #     print('No messages found.')
-    # else:
-    #     print('Message from:')
-    # for msg in messages:
-    #     msg_dict = msg_res.get(userId='me', id=msg['id']).execute()
-    #     msg_headers = msg_dict['payload']['headers']
-    #     msg_from = filter(lambda hdr: hdr['name'] == 'From', msg_headers)
-    #     msg_from = list(msg_from)[0]
-    #     print(msg_from['value'])
-    
+    service = build('gmail', 'v1', credentials=creds)    
     result = service.users().messages().list(userId='me').execute()
     messages = result.get('messages')
     for msg in messages:
